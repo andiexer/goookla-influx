@@ -4,6 +4,15 @@ this is a small golang app that will monitor continuously your internet speed wi
 
 > WORK IN PROGRESS! this is a project to get in touch with golang
 
+## TODOs
+
+- [ ] dockerfile and ready to use container
+- [ ] support for influx < 1.8
+- [ ] documentation
+- [ ] grafana dashboards influx >= 1.8
+- [ ] grafana dashboards influx < 1.8
+
+
 ## Usage
 
 | Environment Variable 	| Description                                                      	| Default Value 	|
