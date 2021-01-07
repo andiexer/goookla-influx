@@ -11,6 +11,7 @@ this is a small golang app that will monitor continuously your internet speed wi
 - [ ] documentation
 - [ ] grafana dashboards influx >= 1.8
 - [ ] grafana dashboards influx < 1.8
+- [ ] auto build 
 
 
 ## Usage
