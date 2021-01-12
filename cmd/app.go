@@ -20,7 +20,8 @@ func NewApp(sink *sinks.SinkSender, interval uint, serverId string) *App {
 
 func (a *App) Run() {
 	log.Info().Msg("starting gookla speedtest app")
-	args := []string{"--progress=no", "--format=csv"}
+
+	args := []string{"--accept-license", "--progress=no", "--format=csv"}
 	if a.serverId != "" {
 		log.Info().Msgf("using serverId=%s", a.serverId)
 		args = append(args, fmt.Sprintf("--server-id=%s", a.serverId))
@@ -30,17 +31,16 @@ func (a *App) Run() {
 	for true {
 		log.Info().Msg("exec new speedtest measurement")
 
-		out, err := exec.Command("speedtest",args...).Output()
+		cmd := exec.Command("speedtest",args...)
+		output, err := cmd.Output()
 		if err != nil {
 			log.Err(err)
 		}
 
-		res := sinks.NewSpeedtestResult(out)
+		res := sinks.NewSpeedtestResult(output)
 		(*a.sink).Send(res)
 
 		log.Info().Msgf("goto sleep for seconds=%d", a.interval)
 		time.Sleep(time.Duration(a.interval) * time.Second)
 	}
-
 }
-
