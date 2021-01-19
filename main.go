@@ -24,6 +24,6 @@ func main() {
 		os.Exit(-1)
 	}
 
-	app := cmd.NewApp(&sink, cfg.Config.Interval, cfg.Config.ServerId)
+	app := cmd.NewApp(sink, cfg.Config.Interval, cfg.Config.ServerId)
 	app.Run()
 }

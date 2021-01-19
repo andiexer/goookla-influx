@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"github.com/rs/zerolog/log"
 	"goookla-influx/internal/sinks"
@@ -9,12 +10,12 @@ import (
 )
 
 type App struct {
-	sink *sinks.SinkSender
+	sink sinks.SinkSender
 	interval uint
 	serverId string
 }
 
-func NewApp(sink *sinks.SinkSender, interval uint, serverId string) *App {
+func NewApp(sink sinks.SinkSender, interval uint, serverId string) *App {
 	return &App{sink: sink, interval: interval, serverId: serverId}
 }
 
@@ -28,19 +29,34 @@ func (a *App) Run() {
 	}
 	log.Debug().Msgf("using arguments=%s", args)
 
-	for true {
-		log.Info().Msg("exec new speedtest measurement")
+	for {
+		out, err := a.executeSpeedtest(args)
 
-		cmd := exec.Command("speedtest",args...)
-		output, err := cmd.Output()
 		if err != nil {
-			log.Err(err)
+			log.Error().Err(err).Msg("error while exec speedtest")
+		} else {
+			a.sink.Send(sinks.NewSpeedtestResult(out))
 		}
-
-		res := sinks.NewSpeedtestResult(output)
-		(*a.sink).Send(res)
 
 		log.Info().Msgf("goto sleep for seconds=%d", a.interval)
 		time.Sleep(time.Duration(a.interval) * time.Second)
 	}
+}
+
+func (a App) executeSpeedtest(args []string) ([]byte, error){
+	log.Info().Msg("exec new speedtest measurement")
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
+
+	cmd := exec.CommandContext(ctx, "speedtest", args...)
+	out, err := cmd.Output()
+	if err != nil {
+		return nil, err
+	}
+
+	if ctx.Err() != nil {
+		return nil, ctx.Err()
+	}
+
+	return out, nil
 }
