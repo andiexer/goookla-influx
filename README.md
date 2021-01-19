@@ -6,10 +6,10 @@ this is a small golang app that will monitor continuously your internet speed wi
 
 ## TODOs
 
-- [ ] dockerfile and ready to use container
+- [x] dockerfile and ready to use container
 - [ ] support for influx < 1.8
-- [ ] documentation
-- [ ] grafana dashboards influx >= 1.8
+- [x] documentation
+- [x] grafana dashboards influx >= 1.8
 - [ ] grafana dashboards influx < 1.8
 - [ ] auto build 
 
@@ -27,3 +27,11 @@ this is a small golang app that will monitor continuously your internet speed wi
 | INFLUX_V2_ORG            | **only for influxdbv2 sink** <br> organization for influxdb >= 1.8                         | "devlabs"        |
 | INFLUX_V2_BUCKET          | **only for influxdbv2 sink** <br> data bucket for influxdb >= 1.8                         | "speedtest"        |
 | INFLUX_V2_AUTHTOKEN         | **only for influxdbv2 sink** <br> auth token for influxdb >= 1.8                         | ""        |
+
+## Grafana Dashboard
+
+i created some example dashboard which you can use to display your data. 
+
+**grafana dashboard for influxdb > 1.8:** [go to dashboard json](./third_party/grafana_dashboard_influxdbv2.json)
+
+**grafana dashboard for influxdb <= 1.8:** comming soon
