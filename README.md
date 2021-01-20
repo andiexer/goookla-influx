@@ -37,3 +37,30 @@ I created an example dashboard which you can use to display your data.
 **grafana dashboard for influxdb > 1.8:** [go to dashboard json](./third_party/grafana_dashboard_influxdbv2.json)
 
 **grafana dashboard for influxdb <= 1.8:** comming soon
+
+## Run it locally on docker
+
+### build docker image locally
+
+if you want to create the docker image by yourself you can do this like this:
+
+```
+docker build -t goookla -f ./build/Dockerfile .
+```
+
+### run image
+
+run a new container like this with the minimal informations:
+
+```bash
+docker run -d \
+--name goookla \ 
+-e "SINK=<yourSink>" \
+-e "INTERVAL=<interval in seconds>" \
+-e "INFLUX_HOST=http://localhost:8086" \
+-e "INFLUX_AUTHTOKEN=<your auth token>" \
+aexer/goookla-influx:latest
+```
+
+
+
