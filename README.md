@@ -30,7 +30,9 @@ this is a small golang app that will monitor continuously your internet speed wi
 
 ## Grafana Dashboard
 
-i created some example dashboard which you can use to display your data. 
+I created an example dashboard which you can use to display your data. 
+
+![grafana dashboard](./docs/grafana_dashboard.png)
 
 **grafana dashboard for influxdb > 1.8:** [go to dashboard json](./third_party/grafana_dashboard_influxdbv2.json)
 
