@@ -21,7 +21,6 @@ func NewApp(sink sinks.SinkSender, interval uint, serverId string) *App {
 
 func (a *App) Run() {
 	log.Info().Msg("starting gookla speedtest app")
-
 	args := []string{"--accept-license", "--progress=no", "--format=csv"}
 	if a.serverId != "" {
 		log.Info().Msgf("using serverId=%s", a.serverId)

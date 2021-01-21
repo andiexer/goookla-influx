@@ -11,6 +11,8 @@ type SinkSender interface {
 	Send(speedtestResult *SpeedtestResult) error
 }
 
+var A string = "asdfasdf"
+
 type SpeedtestResult struct {
 	Ping float64
 	Jitter float64
