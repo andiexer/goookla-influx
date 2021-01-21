@@ -8,10 +8,13 @@ import (
 )
 
 type SinkSender interface {
-	Send(speedtestResult *SpeedtestResult) error
+	Send(speedtestResult *SpeedtestResult) (err error)
 }
 
-var A string = "asdfasdf"
+const pingField = "ping"
+const jitterField = "jitter"
+const downloadField = "download"
+const uploadField = "upload"
 
 type SpeedtestResult struct {
 	Ping float64

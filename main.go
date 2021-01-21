@@ -20,7 +20,7 @@ func main() {
 		sink = sinks.NewInfluxDbV2Sink(cfg.Config.InfluxHost, cfg.Config.InfluxAuthToken, cfg.Config.InfluxOrg, cfg.Config.InfluxBucket)
 	case "influxdbv1":
 		log.Debug().Msg("using influxdb v1")
-		sink = sinks.NewInfluxDbV1Sink(cfg.Config.InfluxHost, cfg.Config.InfluxUser, cfg.Config.InfluxPassword)
+		sink = sinks.NewInfluxDbV1Sink(cfg.Config.InfluxHost, cfg.Config.InfluxUser, cfg.Config.InfluxPassword, cfg.Config.InfluxDatabase)
 	default:
 		log.Fatal().Msgf("the provided sink=%s is not possible", cfg.Config.Sink)
 	}

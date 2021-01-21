@@ -15,6 +15,7 @@ type Config struct {
 	Sink            string `envconfig:"SINK" default:"console"`
 	ServerId		string `envconfig:"SERVER_ID" default:""`
 	InfluxHost      string `envconfig:"INFLUX_HOST" default:"http://localhost:8086"`
+	InfluxDatabase	string `envconfig:"INFLUX_V1_DATABASE" default:"speedtest"`
 	InfluxUser      string `envconfig:"INFLUX_V1_USER" default:"admin"`
 	InfluxPassword  string `envconfig:"INFLUX_V1_PASSWORD" default:"admin"`
 	InfluxOrg       string `envconfig:"INFLUX_V2_ORG" default:"devlabs"`

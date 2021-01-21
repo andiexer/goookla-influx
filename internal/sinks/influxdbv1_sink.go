@@ -10,39 +10,42 @@ type InfluxDbV1Sink struct {
 	influxUrl string
 	user string
 	password string
+	database string
 }
 
-func NewInfluxDbV1Sink(influxUrl string, user string, password string) *InfluxDbV1Sink {
-	return &InfluxDbV1Sink{influxUrl: influxUrl, user: user, password: password}
+func NewInfluxDbV1Sink(influxUrl string, user string, password string, database string) *InfluxDbV1Sink {
+	return &InfluxDbV1Sink{influxUrl: influxUrl, user: user, password: password, database: database}
 }
 
-func (i *InfluxDbV1Sink) Send(speedtestResult *SpeedtestResult) error {
+func (i *InfluxDbV1Sink) Send(speedtestResult *SpeedtestResult) (err error) {
 	log.Debug().Msg("sending data to influxdb v1")
-	c, err := client.NewHTTPClient(client.HTTPConfig{
+	var c client.Client
+	c, err = client.NewHTTPClient(client.HTTPConfig{
 		Addr: i.influxUrl,
 		Username: i.user,
 		Password: i.password,
 	})
 
 	if err != nil {
-		return err
+		return
 	}
 	defer c.Close()
 
 	bp, _ := client.NewBatchPoints(client.BatchPointsConfig{
-		Database: "speedtest",
+		Database: i.database,
 		Precision: "s",
 	})
 
 	speedtest_fields := map[string]interface{}{
-		"ping": speedtestResult.Ping,
-		"jitter" : speedtestResult.Jitter,
-		"dowload": speedtestResult.Download,
-		"upload" : speedtestResult.Upload,
+		pingField: speedtestResult.Ping,
+		jitterField : speedtestResult.Jitter,
+		downloadField: speedtestResult.Download,
+		uploadField : speedtestResult.Upload,
 	}
-	pt, err := client.NewPoint("speedtest", nil, speedtest_fields, time.Now())
+	var pt *client.Point
+	pt, err = client.NewPoint("speedtest", nil, speedtest_fields, time.Now())
 	if err != nil {
-		return err
+		return
 	}
 	bp.AddPoint(pt)
 	return c.Write(bp)
