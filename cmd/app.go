@@ -6,6 +6,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"goookla-influx/internal/sinks"
 	"os/exec"
+	"runtime"
 	"time"
 )
 
@@ -36,13 +37,13 @@ func (a *App) Run() {
 		} else {
 			a.sink.Send(sinks.NewSpeedtestResult(out))
 		}
-
 		log.Info().Msgf("goto sleep for seconds=%d", a.interval)
+		runtime.GC()
 		time.Sleep(time.Duration(a.interval) * time.Second)
 	}
 }
 
-func (a App) executeSpeedtest(args []string) ([]byte, error){
+func (a App) executeSpeedtest(args []string) (string, error){
 	log.Info().Msg("exec new speedtest measurement")
 	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
@@ -50,12 +51,12 @@ func (a App) executeSpeedtest(args []string) ([]byte, error){
 	cmd := exec.CommandContext(ctx, "speedtest", args...)
 	out, err := cmd.Output()
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	if ctx.Err() != nil {
-		return nil, ctx.Err()
+		return "", ctx.Err()
 	}
 
-	return out, nil
+	return string(out), nil
 }
