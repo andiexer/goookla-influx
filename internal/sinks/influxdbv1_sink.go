@@ -3,6 +3,7 @@ package sinks
 import (
 	"github.com/rs/zerolog/log"
 	"github.com/influxdata/influxdb1-client/v2"
+	"goookla-influx/internal/speedtest"
 	"time"
 )
 
@@ -17,7 +18,7 @@ func NewInfluxDbV1Sink(influxUrl string, user string, password string, database 
 	return &InfluxDbV1Sink{influxUrl: influxUrl, user: user, password: password, database: database}
 }
 
-func (i *InfluxDbV1Sink) Send(speedtestResult *SpeedtestResult) (err error) {
+func (i *InfluxDbV1Sink) Send(result *speedtest.TestResult) (err error) {
 	log.Debug().Msg("sending data to influxdb v1")
 	var c client.Client
 	c, err = client.NewHTTPClient(client.HTTPConfig{
@@ -37,10 +38,10 @@ func (i *InfluxDbV1Sink) Send(speedtestResult *SpeedtestResult) (err error) {
 	})
 
 	speedtest_fields := map[string]interface{}{
-		pingField: speedtestResult.Ping,
-		jitterField : speedtestResult.Jitter,
-		downloadField: speedtestResult.Download,
-		uploadField : speedtestResult.Upload,
+		pingField: result.Ping.Latency,
+		jitterField : result.Ping.Jitter,
+		downloadField: result.Download.ToMbit(),
+		uploadField : result.Upload.ToMbit(),
 	}
 	var pt *client.Point
 	pt, err = client.NewPoint("speedtest", nil, speedtest_fields, time.Now())

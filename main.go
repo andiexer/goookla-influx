@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+	//defer profile.Start(profile.MemProfile, profile.MemProfileRate(1), profile.ProfilePath(".")).Stop()
 	cfg := config.LoadConfig()
 	var sink sinks.SinkSender
 	switch strings.ToLower(cfg.Config.Sink) {
