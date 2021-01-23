@@ -19,18 +19,16 @@ func NewApp(sink sinks.SinkSender, interval uint, serverId string) *App {
 
 func (a *App) Run() {
 	log.Info().Msg("starting gookla speedtest app")
-
+	ticker := time.NewTicker(time.Duration(a.interval) * time.Second).C
 	for {
-		out, err := speedtest.Exec()
-
-		if err != nil {
-			log.Error().Err(err).Msg("error while exec speedtest")
-			continue
-		} else {
-			a.sink.Send(out)
+		select {
+			case <- ticker:
+				out, err := speedtest.Exec()
+				if err != nil {
+					log.Error().Err(err).Msg("error while exec speedtest")
+				} else {
+					a.sink.Send(out)
+				}
 		}
-
-		log.Info().Msgf("sleep for seconds=%d", a.interval)
-		time.Sleep(time.Duration(a.interval) * time.Second)
 	}
 }
