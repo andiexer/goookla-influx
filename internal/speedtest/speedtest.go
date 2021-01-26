@@ -4,28 +4,29 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"github.com/rs/zerolog/log"
 	"os/exec"
 	"time"
+
+	"github.com/rs/zerolog/log"
 )
 
 type TestResult struct {
-	Ping Ping `json:"ping"`
+	Ping     Ping        `json:"ping"`
 	Download Measurement `json:"download"`
-	Upload Measurement `json:"upload"`
+	Upload   Measurement `json:"upload"`
 }
 
 type Ping struct {
-	Jitter float32 		`json:"jitter"`
-	Latency float32 	`json:"latency"`
+	Jitter  float32 `json:"jitter"`
+	Latency float32 `json:"latency"`
 }
 
 type Measurement struct {
-	Bandwith int 		`json:"bandwidth"`
+	Bandwith int `json:"bandwidth"`
 }
 
-func (m Measurement) ToMbit() float32 {
-	return float32(m.Bandwith)
+func (m Measurement) ToMbit() int {
+	return m.Bandwith / 125000
 }
 
 var buf bytes.Buffer
